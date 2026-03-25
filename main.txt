@@ -1,0 +1,56 @@
+from ultralytics import YOLO
+import cv2
+from datetime import datetime
+
+model = YOLO("best.pt")
+
+source = 0
+cap = cv2.VideoCapture(source)
+
+
+ultimul_semn_vazut = None
+
+print("Incepe detecția (Apasă 'q' pentru a ieși)")
+
+def salveaza_in_log(nume_obiect, confidenta, nume_fisier="istoric_detectii.txt"):
+   
+    timp_acum = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    
+    linie_text = f"[{timp_acum}] DETECTAT: {nume_obiect} | Confidenta: {confidenta:.2f}\n"
+    
+    with open(nume_fisier, "a") as f:
+        f.write(linie_text)
+
+while cap.isOpened():
+    success, frame = cap.read()
+    if success:
+        results = model(frame, conf=0.7, verbose=False)
+
+        if len(results[0].boxes) > 0:
+            box = results[0].boxes[0]
+            cls_id = int(box.cls[0])
+            conf = float(box.conf[0])
+            
+            nume_semn = model.names[cls_id]
+
+            if nume_semn != ultimul_semn_vazut:
+                print(f"DETECTAT: {nume_semn} | Confidence: {conf:.2f}")
+                salveaza_in_log(nume_semn, conf)
+                ultimul_semn_vazut = nume_semn
+
+                
+            annotated_frame = results[0].plot()
+            cv2.imshow("Detectie Semne", annotated_frame)
+
+        else:
+            ultimul_semn_vazut = None
+            
+            cv2.imshow("Detectie Semne", frame)
+
+        if cv2.waitKey(1) & 0xFF == ord("q"):
+            break
+    else:
+        break
+
+cap.release()
+cv2.destroyAllWindows()
