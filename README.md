@@ -1,4 +1,4 @@
-# Traffic Sign Detection - YOLOv8 [cite: 4, 9]
+# Traffic Sign Detection - YOLOv8 
 
 Deep Learning system for automatic identification and classification of traffic signs from images or video streams.
 
