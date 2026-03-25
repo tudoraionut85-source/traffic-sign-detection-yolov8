@@ -4,7 +4,7 @@ Deep Learning system for automatic identification and classification of traffic 
 
 **Authors:** Ungureanu Andrei & Tudora Ionuț (12.18.2025).
 
-###🛠️ Technologies 
+🛠️ Technologies 
 * **Model:** Ultralytics YOLOv8 for detection.
 * **Processing:** OpenCV for real-time visualization.
 * **Configuration:** YAML for dataset and classes.
